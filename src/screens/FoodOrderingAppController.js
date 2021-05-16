@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "../screens/home/Home";
 
-class Controller extends Component {
+class FoodOrderingAppController extends Component {
   constructor() {
     super();
     this.baseUrl = "http://localhost:8080/api/";
@@ -27,4 +27,4 @@ class Controller extends Component {
   }
 }
 
-export default Controller;
+export default FoodOrderingAppController;

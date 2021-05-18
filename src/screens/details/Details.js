@@ -3,6 +3,14 @@ import Header from "../../common/header/Header";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core";
+import IconButton from "@material-ui/core/IconButton";
+import Card from "@material-ui/core/Card";
+import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent  from "@material-ui/core/CardContent";
+import Avatar from "@material-ui/core/Avatar";
+import Badge from "@material-ui/core/Badge";
+import Button from "@material-ui/core/Button";
 import "@fortawesome/fontawesome-free-solid";
 import "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-free-regular";
@@ -131,8 +139,16 @@ class Details extends Component{
     });
   };
 
+  minusButtonClickHandler = (item) => {
+  }
 
-    render() {
+  cartAddButtonClickHandler = (item) => {
+  }
+
+  checkOutButtonClickHandler = () => {
+  }
+
+  render() {
         const { classes } = this.props;
         return(
             <div>
@@ -196,8 +212,8 @@ class Details extends Component{
                           }{" "}
                           CUSTOMERS
                         </Typography>
-                      </div>
-                      <div className="restaurant-avg-cost-container">
+                        </div>
+                        <div className="restaurant-avg-cost-container">
                         <div className="restaurant-avg-cost">
                           <FontAwesomeIcon icon="rupee-sign" />
                           <Typography
@@ -219,6 +235,129 @@ class Details extends Component{
                     </div>
                   </div>
                 </div>
+
+                {/** Item cards **/}
+                <div className="my-cart">
+                    <Card className={classes.myCart}>
+                    <CardHeader
+                        avatar={
+                        <Avatar
+                            aria-label="shopping-cart"
+                            className={classes.shoppingCart}
+                        >
+                            <Badge
+                            badgeContent={this.state.cartItems.length}
+                            color="primary"
+                            showZero={true}
+                            invisible={this.state.badgeVisible}
+                            className={classes.badge}
+                            >
+                            <ShoppingCartIcon />
+                            </Badge>
+                        </Avatar>
+                        }
+                        title="My Cart"
+                        titleTypographyProps={{
+                        variant: "h6",
+                        }}
+                        className={classes.cartHeader}
+                    />
+                    <CardContent className={classes.cardContent}>
+                        {this.state.cartItems.map((
+                        cartItem //Iterating over each item in cartItem to show in the cart.
+                        ) => (
+                        <div className="cart-menu-item-container" key={cartItem.id}>
+                            <FontAwesomeIcon
+                            icon="stop-circle"
+                            style={{
+                                color:
+                                cartItem.itemType === "NON_VEG"
+                                    ? "#BE4A47"
+                                    : "#5A9A5B",
+                            }}
+                            />
+                            <Typography
+                            variant="subtitle1"
+                            component="p"
+                            className={classes.menuItemName}
+                            id="cart-menu-item-name"
+                            >
+                            {cartItem.name[0].toUpperCase() + cartItem.name.slice(1)}
+                            </Typography>
+                            <div className="quantity-container">
+                            <IconButton
+                                className={classes.cartItemButton}
+                                id="minus-button"
+                                aria-label="remove"
+                                onClick={() => this.minusButtonClickHandler(cartItem)}
+                            >
+                                <FontAwesomeIcon icon="minus" size="xs" color="black" />
+                            </IconButton>
+                            <Typography
+                                variant="subtitle1"
+                                component="p"
+                                className={classes.itemQuantity}
+                            >
+                                {cartItem.quantity}
+                            </Typography>
+                            <IconButton
+                                className={classes.cartItemButton}
+                                aria-label="add"
+                                onClick={() => this.cartAddButtonClickHandler(cartItem)}
+                            >
+                                <FontAwesomeIcon icon="plus" size="xs" color="black" />
+                            </IconButton>
+                            </div>
+                            <div className="item-price">
+                            <FontAwesomeIcon
+                                icon="rupee-sign"
+                                style={{ color: "grey" }}
+                            />
+                            <Typography
+                                variant="subtitle1"
+                                component="p"
+                                className={classes.itemPrice}
+                                id="cart-item-price"
+                            >
+                                {cartItem.totalAmount.toFixed(2)}
+                            </Typography>
+                            </div>
+                        </div>
+                        ))}
+                        <div className="total-amount-container">
+                        <Typography
+                            variant="subtitle2"
+                            component="p"
+                            className={classes.totalAmount}
+                        >
+                            TOTAL AMOUNT
+                        </Typography>
+                        <div className="total-price">
+                            <FontAwesomeIcon icon="rupee-sign" />
+                            <Typography
+                            variant="subtitle1"
+                            component="p"
+                            className={classes.itemPrice}
+                            id="cart-total-price"
+                            >
+                            {this.state.totalAmount.toFixed(2)}
+                            </Typography>
+                        </div>
+                        </div>
+                        <Button
+                        variant="contained"
+                        color="primary"
+                        fullWidth={true}
+                        className={classes.checkOutButton}
+                        onClick={this.checkOutButtonClickHandler}
+                        >
+                        CHECKOUT
+                        </Button>
+                    </CardContent>
+                    </Card>
+                </div>
+
+
             </div>
         )
     }

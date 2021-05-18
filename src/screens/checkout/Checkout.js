@@ -5,12 +5,24 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
-import { withStyles, Tabs, Tab, IconButton } from "@material-ui/core";
+import {
+  withStyles,
+  Tabs,
+  Tab,
+  IconButton,
+  FormControl,
+  FormHelperText,
+} from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import InputLabel from "@material-ui/core/InputLabel";
+import Input from "@material-ui/core/Input";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import Button from "@material-ui/core/Button";
 
 const styles = (theme) => ({
   stepper: {
@@ -27,6 +39,34 @@ const styles = (theme) => ({
 
   addressCheckButton: {
     float: "right",
+  },
+
+  saveAddressForm: {
+    width: "60%",
+    padding: "20px",
+    textAlign: "left",
+  },
+
+  formControl: {
+    width: "200px",
+  },
+
+  selectField: {
+    width: "100%",
+  },
+
+  formButton: {
+    "font-weight": 400,
+    width: "150px",
+  },
+
+  actionsContainer: {
+    marginBottom: theme.spacing(2),
+  },
+
+  button: {
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1),
   },
 });
 
@@ -215,10 +255,162 @@ class Checkout extends Component {
                             )}
                           </TabContainer>
                         )}
+                        {this.state.value === 1 && (
+                          <TabContainer className={classes.saveAddressForm}>
+                            <FormControl
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel htmlFor="flat-building-name">
+                                Flat / Building No.
+                              </InputLabel>
+                              <Input
+                                id="flat-building-name"
+                                className="input-fields"
+                                flatbuildingName={this.state.flatBuildingName}
+                                fullWidth={true}
+                                value={this.state.flatBuildingName}
+                              />
+                              <FormHelperText
+                                className={this.state.flatBuildingNameRequired}
+                              >
+                                <span className="red">required</span>
+                              </FormHelperText>
+                            </FormControl>
+                            <br />
+                            <br />
+                            <FormControl className={classes.formControl}>
+                              <InputLabel htmlFor="locality">
+                                Locality
+                              </InputLabel>
+                              <Input
+                                id="locality"
+                                className="input-fields"
+                                locality={this.state.locality}
+                                fullWidth={true}
+                                value={this.state.locality}
+                              />
+                              <FormHelperText
+                                className={this.state.localityRequired}
+                              >
+                                <span className="red">required</span>
+                              </FormHelperText>
+                            </FormControl>
+                            <br />
+                            <br />
+                            <FormControl
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel htmlFor="city">City</InputLabel>
+                              <Input
+                                id="city"
+                                className="input-fields"
+                                type="text"
+                                city={this.state.city}
+                                fullWidth={true}
+                                value={this.state.city}
+                              />
+                              <FormHelperText
+                                className={this.state.cityRequired}
+                              >
+                                <span className="red">required</span>
+                              </FormHelperText>
+                            </FormControl>
+                            <br />
+                            <br />
+                            <FormControl
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel htmlFor="state">State</InputLabel>
+                              <Select
+                                id="state"
+                                className={classes.selectField}
+                                state={this.state.selectedState}
+                                MenuProps={{
+                                  style: {
+                                    marginTop: "50px",
+                                    maxHeight: "300px",
+                                  },
+                                }}
+                                value={this.state.selectedState}
+                              >
+                                {this.state.states.map((state) => (
+                                  <MenuItem value={state.id} key={state.id}>
+                                    {state.state_name}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                              <FormHelperText
+                                className={this.state.stateRequired}
+                              >
+                                <span className="red">required</span>
+                              </FormHelperText>
+                            </FormControl>
+                            <br />
+                            <br />
+                            <FormControl
+                              required
+                              className={classes.formControl}
+                            >
+                              <InputLabel htmlFor="pincode">Pincode</InputLabel>
+                              <Input
+                                id="pincode"
+                                className="input-fields"
+                                pincode={this.state.pincode}
+                                fullWidth={true}
+                                value={this.state.pincode}
+                              />
+                              <FormHelperText
+                                className={this.state.pincodeRequired}
+                              >
+                                <span className="red">required</span>
+                              </FormHelperText>
+                              <FormHelperText
+                                className={this.state.pincodeHelpText}
+                              >
+                                <span className="red">
+                                  Pincode must contain only numbers and must be
+                                  6 digits long
+                                </span>
+                              </FormHelperText>
+                            </FormControl>
+                            <br />
+                            <br />
+                            <br />
+                            <Button
+                              variant="contained"
+                              className={classes.formButton}
+                              color="secondary"
+                            >
+                              SAVE ADDRESS
+                            </Button>
+                          </TabContainer>
+                        )}
                       </div>
                     ) : (
                       ""
                     )}
+                    <div className={classes.actionsContainer}>
+                      <div>
+                        <Button
+                          disabled={this.state.activeStep === 0}
+                          className={classes.button}
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          className={classes.button}
+                        >
+                          {this.state.activeStep === this.state.steps.length - 1
+                            ? "Finish"
+                            : "Next"}
+                        </Button>
+                      </div>
+                    </div>
                   </StepContent>
                 </Step>
               ))}

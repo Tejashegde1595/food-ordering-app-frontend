@@ -169,6 +169,36 @@ class Checkout extends Component {
     });
   };
 
+  nextButtonClickHandler = () => {
+    if (this.state.value === 0) {
+      if (this.state.selectedAddress !== "") {
+        let activeStep = this.state.activeStep;
+        activeStep++;
+        this.setState({
+          ...this.state,
+          activeStep: activeStep,
+        });
+      } else {
+        this.setState({
+          ...this.state,
+          snackBarOpen: true,
+          snackBarMessage: "Select Address",
+        });
+      }
+    }
+    if (this.state.activeStep === 1) {
+      if (this.state.selectedPayment === "") {
+        let activeStep = this.state.activeStep;
+        this.setState({
+          ...this.state,
+          activeStep: activeStep,
+          snackBarOpen: true,
+          snackBarMessage: "Select Payment",
+        });
+      }
+    }
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -267,7 +297,7 @@ class Checkout extends Component {
                               <Input
                                 id="flat-building-name"
                                 className="input-fields"
-                                flatbuildingName={this.state.flatBuildingName}
+                                flatbuildingname={this.state.flatBuildingName}
                                 fullWidth={true}
                                 value={this.state.flatBuildingName}
                               />
@@ -404,6 +434,7 @@ class Checkout extends Component {
                           variant="contained"
                           color="primary"
                           className={classes.button}
+                          onClick={this.nextButtonClickHandler}
                         >
                           {this.state.activeStep === this.state.steps.length - 1
                             ? "Finish"

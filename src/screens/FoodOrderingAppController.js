@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Home from "../screens/home/Home";
+import Checkout from "../screens/checkout/Checkout";
 
 class FoodOrderingAppController extends Component {
   constructor() {
@@ -19,6 +20,11 @@ class FoodOrderingAppController extends Component {
               exact
               path="/"
               render={(props) => <Home {...props} baseUrl={this.baseUrl} />}
+            />
+            <Route
+              exact
+              path="/checkout"
+              render={(props) => <Checkout {...props} baseUrl={this.baseUrl} />}
             />
           </Switch>
         </div>

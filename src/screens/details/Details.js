@@ -15,6 +15,8 @@ import "@fortawesome/fontawesome-free-solid";
 import "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-free-regular";
 import "./Details.css";
+import Divider from "@material-ui/core/Divider";
+import AddIcon from "@material-ui/icons/Add";
 
 const styles = (theme) => ({
     textRatingCost: {
@@ -148,6 +150,9 @@ class Details extends Component{
   checkOutButtonClickHandler = () => {
   }
 
+  addButtonClickHandler = (item) => {
+  }
+
   render() {
         const { classes } = this.props;
         return(
@@ -235,8 +240,64 @@ class Details extends Component{
                     </div>
                   </div>
                 </div>
-
-                {/** Item cards **/}
+                {/** Menu and Cart card */}
+                {/* Menu and Cart Card Container */}
+                <div className="menu-details-cart-container">
+                <div className="menu-details">
+                    {this.state.categories.map((
+                    category //Iterating for each category in the categories array to display each category
+                    ) => (
+                    <div key={category.id}>
+                        <Typography
+                        variant="overline"
+                        component="p"
+                        className={classes.categoryName}
+                        >
+                        {category.category_name}
+                        </Typography>
+                        <Divider />
+                        {category.item_list.map((
+                        item //Iterating over each item to display each items in the category.
+                        ) => (
+                        <div className="menu-item-container" key={item.id}>
+                            <FontAwesomeIcon
+                            icon="circle"
+                            size="sm"
+                            color={
+                                item.item_type === "NON_VEG" ? "#BE4A47" : "#5A9A5B"
+                            }
+                            />
+                            <Typography
+                            variant="subtitle1"
+                            component="p"
+                            className={classes.menuItemName}
+                            >
+                            {item.item_name[0].toUpperCase() +
+                                item.item_name.slice(1)}
+                            </Typography>
+                            <div className="item-price">
+                            <FontAwesomeIcon icon="rupee-sign" />
+                            <Typography
+                                variant="subtitle1"
+                                component="p"
+                                className={classes.itemPrice}
+                            >
+                                {item.price.toFixed(2)}
+                            </Typography>
+                            </div>
+                            <IconButton
+                            className={classes.addButton}
+                            aria-label="add"
+                            onClick={() => this.addButtonClickHandler(item)}
+                            >
+                            <AddIcon />
+                            </IconButton>
+                        </div>
+                        ))}
+                    </div>
+                    ))}
+                </div>
+                {/* Cart Card */}
                 <div className="my-cart">
                     <Card className={classes.myCart}>
                     <CardHeader
@@ -356,7 +417,9 @@ class Details extends Component{
                     </CardContent>
                     </Card>
                 </div>
-
+                </div>
+                {/** Item cards **/}
+              
 
             </div>
         )

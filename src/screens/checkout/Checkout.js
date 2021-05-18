@@ -199,6 +199,15 @@ class Checkout extends Component {
     }
   };
 
+  backButtonClickHandler = () => {
+    let activeStep = this.state.activeStep;
+    activeStep--;
+    this.setState({
+      ...this.state,
+      activeStep: activeStep,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -427,6 +436,7 @@ class Checkout extends Component {
                         <Button
                           disabled={this.state.activeStep === 0}
                           className={classes.button}
+                          onClick={this.backButtonClickHandler}
                         >
                           Back
                         </Button>

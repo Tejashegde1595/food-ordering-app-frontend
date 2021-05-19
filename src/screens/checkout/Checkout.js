@@ -214,6 +214,24 @@ class Checkout extends Component {
     });
   };
 
+  addressSelectedClickHandler = (addressId) => {
+    let addresses = this.state.addresses;
+    let selectedAddress = "";
+    addresses.forEach((address) => {
+      if (address.id === addressId) {
+        address.selected = true;
+        selectedAddress = address.id;
+      } else {
+        address.selected = false;
+      }
+    });
+    this.setState({
+      ...this.state,
+      addresses: addresses,
+      selectedAddress: selectedAddress,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -241,6 +259,7 @@ class Checkout extends Component {
                           <Tab label="EXISTING ADDRESS" />
                           <Tab label="NEW ADDRESS" />
                         </Tabs>
+                        {/* Display Existing Address */}
                         {this.state.value === 0 && (
                           <TabContainer>
                             {this.state.addresses.length !== 0 ? (
@@ -278,6 +297,11 @@ class Checkout extends Component {
                                       </Typography>
                                       <IconButton
                                         className={classes.addressCheckButton}
+                                        onClick={() =>
+                                          this.addressSelectedClickHandler(
+                                            address.id
+                                          )
+                                        }
                                       >
                                         <CheckCircleIcon
                                           style={{
@@ -300,6 +324,7 @@ class Checkout extends Component {
                             )}
                           </TabContainer>
                         )}
+                        {/* Add New Address */}
                         {this.state.value === 1 && (
                           <TabContainer className={classes.saveAddressForm}>
                             <FormControl
@@ -435,6 +460,7 @@ class Checkout extends Component {
                         )}
                       </div>
                     ) : (
+                      // Display Modes of Payment
                       <div className="payment-container">
                         <FormControl
                           component="fieldset"

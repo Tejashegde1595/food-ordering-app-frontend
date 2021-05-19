@@ -142,16 +142,99 @@ class Details extends Component{
   };
 
   minusButtonClickHandler = (item) => {
+    let cartItems = this.state.cartItems;
+    let index = cartItems.indexOf(item);
+    let itemRemoved = false;
+    cartItems[index].quantity--;
+    if (cartItems[index].quantity === 0) {
+      cartItems.splice(index, 1);
+      itemRemoved = true;
+    } else {
+      cartItems[index].totalAmount =
+        cartItems[index].price * cartItems[index].quantity;
+    }
+    let totalAmount = 0;
+    cartItems.forEach((cartItem) => {
+      totalAmount = totalAmount + cartItem.totalAmount;
+    });
+    this.setState({
+      ...this.state,
+      cartItems: cartItems,
+      snackBarOpen: true,
+      snackBarMessage: itemRemoved
+        ? "Item removed from cart!"
+        : "Item quantity decreased by 1!",
+      totalAmount: totalAmount,
+    });
   }
 
   cartAddButtonClickHandler = (item) => {
+    let cartItems = this.state.cartItems;
+    let index = cartItems.indexOf(item);
+    cartItems[index].quantity++;
+    cartItems[index].totalAmount =
+      cartItems[index].price * cartItems[index].quantity;
+    let totalAmount = 0;
+    cartItems.forEach((cartItem) => {
+      totalAmount = totalAmount + cartItem.totalAmount;
+    });
+    this.setState({
+      ...this.state,
+      cartItems: cartItems,
+      snackBarOpen: true,
+      snackBarMessage: "Item quantity increased by 1!",
+      totalAmount: totalAmount,
+    });
   }
 
   checkOutButtonClickHandler = () => {
   }
 
   addButtonClickHandler = (item) => {
+    let cartItems = this.state.cartItems;
+    let itemPresentInCart = false;
+    cartItems.forEach((cartItem) => {
+      if (cartItem.id === item.id) {
+        itemPresentInCart = true;
+        cartItem.quantity++;
+        cartItem.totalAmount = cartItem.price * cartItem.quantity;
+      }
+    });
+    if (!itemPresentInCart) {
+      let cartItem = {
+        id: item.id,
+        name: item.item_name,
+        price: item.price,
+        totalAmount: item.price,
+        quantity: 1,
+        itemType: item.item_type,
+      };
+      cartItems.push(cartItem);
+    }
+    let totalAmount = 0;
+    cartItems.forEach((cartItem) => {
+      totalAmount = totalAmount + cartItem.totalAmount;
+    });
+
+    this.setState({
+      ...this.state,
+      cartItems: cartItems,
+      snackBarOpen: true,
+      snackBarMessage: "Item added to cart!",
+      totalAmount: totalAmount,
+    });
   }
+
+  snackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      snackBarOpen: false,
+    });
+  };
 
   render() {
         const { classes } = this.props;
@@ -189,7 +272,7 @@ class Details extends Component{
                         {this.state.restaurantDetails.locality}
                       </Typography>
                       <Typography
-                        variant="subtitle1"
+                        variant="subtitle2"
                         component="p"
                         className={classes.restaurantCategory}
                       >
@@ -240,12 +323,11 @@ class Details extends Component{
                     </div>
                   </div>
                 </div>
-                {/** Menu and Cart card */}
-                {/* Menu and Cart Card Container */}
+                {/** Menu and items */}
                 <div className="menu-details-cart-container">
                 <div className="menu-details">
                     {this.state.categories.map((
-                    category //Iterating for each category in the categories array to display each category
+                    category 
                     ) => (
                     <div key={category.id}>
                         <Typography

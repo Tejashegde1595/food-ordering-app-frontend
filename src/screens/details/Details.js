@@ -142,9 +142,49 @@ class Details extends Component{
   };
 
   minusButtonClickHandler = (item) => {
+    let cartItems = this.state.cartItems;
+    let index = cartItems.indexOf(item);
+    let itemRemoved = false;
+    cartItems[index].quantity--;
+    if (cartItems[index].quantity === 0) {
+      cartItems.splice(index, 1);
+      itemRemoved = true;
+    } else {
+      cartItems[index].totalAmount =
+        cartItems[index].price * cartItems[index].quantity;
+    }
+    let totalAmount = 0;
+    cartItems.forEach((cartItem) => {
+      totalAmount = totalAmount + cartItem.totalAmount;
+    });
+    this.setState({
+      ...this.state,
+      cartItems: cartItems,
+      snackBarOpen: true,
+      snackBarMessage: itemRemoved
+        ? "Item removed from cart!"
+        : "Item quantity decreased by 1!",
+      totalAmount: totalAmount,
+    });
   }
 
   cartAddButtonClickHandler = (item) => {
+    let cartItems = this.state.cartItems;
+    let index = cartItems.indexOf(item);
+    cartItems[index].quantity++;
+    cartItems[index].totalAmount =
+      cartItems[index].price * cartItems[index].quantity;
+    let totalAmount = 0;
+    cartItems.forEach((cartItem) => {
+      totalAmount = totalAmount + cartItem.totalAmount;
+    });
+    this.setState({
+      ...this.state,
+      cartItems: cartItems,
+      snackBarOpen: true,
+      snackBarMessage: "Item quantity increased by 1!",
+      totalAmount: totalAmount,
+    });
   }
 
   checkOutButtonClickHandler = () => {

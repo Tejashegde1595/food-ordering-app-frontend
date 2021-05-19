@@ -232,6 +232,13 @@ class Checkout extends Component {
     });
   };
 
+  inputFlatBuildingNameChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      flatBuildingName: event.target.value,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -340,6 +347,9 @@ class Checkout extends Component {
                                 flatbuildingname={this.state.flatBuildingName}
                                 fullWidth={true}
                                 value={this.state.flatBuildingName}
+                                onChange={
+                                  this.inputFlatBuildingNameChangeHandler
+                                }
                               />
                               <FormHelperText
                                 className={this.state.flatBuildingNameRequired}

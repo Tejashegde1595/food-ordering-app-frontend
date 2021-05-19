@@ -12,6 +12,7 @@ import {
   IconButton,
   FormControl,
   FormHelperText,
+  FormControlLabel,
 } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
@@ -23,6 +24,9 @@ import Input from "@material-ui/core/Input";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import Button from "@material-ui/core/Button";
+import FormLabel from "@material-ui/core/FormLabel";
+import RadioGroup from "@material-ui/core/RadioGroup";
+import Radio from "@material-ui/core/Radio";
 
 const styles = (theme) => ({
   stepper: {
@@ -105,6 +109,8 @@ class Checkout extends Component {
       pincodeRequired: "dispNone",
       pincodeHelpText: "dispNone",
       states: [],
+      selectedPayment: "",
+      payment: [],
     };
   }
 
@@ -429,7 +435,30 @@ class Checkout extends Component {
                         )}
                       </div>
                     ) : (
-                      ""
+                      <div className="payment-container">
+                        <FormControl
+                          component="fieldset"
+                          className={classes.radioFormControl}
+                        >
+                          <FormLabel component="legend">
+                            Select Mode of Payment
+                          </FormLabel>
+                          <RadioGroup
+                            aria-label="payment"
+                            name="payment"
+                            value={this.state.selectedPayment}
+                          >
+                            {this.state.payment.map((payment) => (
+                              <FormControlLabel
+                                key={payment.id}
+                                value={payment.id}
+                                control={<Radio />}
+                                label={payment.payment_name}
+                              />
+                            ))}
+                          </RadioGroup>
+                        </FormControl>
+                      </div>
                     )}
                     <div className={classes.actionsContainer}>
                       <div>

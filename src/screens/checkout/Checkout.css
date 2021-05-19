@@ -75,3 +75,14 @@
   align-items: center;
   margin: 10px 0px;
 }
+
+.label-amount-container {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 10px 0px;
+}
+
+#summary-net-amount {
+  margin-left: 6px;
+}

@@ -34,6 +34,10 @@ import "@fortawesome/fontawesome-free-solid";
 import "@fortawesome/fontawesome-svg-core";
 import "@fortawesome/fontawesome-free-regular";
 import FilledInput from "@material-ui/core/FilledInput";
+import Divider from "@material-ui/core/Divider";
+import CloseIcon from "@material-ui/icons/Close";
+import Snackbar from "@material-ui/core/Snackbar";
+import Fade from "@material-ui/core/Fade";
 
 const styles = (theme) => ({
   stepper: {
@@ -172,6 +176,9 @@ class Checkout extends Component {
       couponName: "",
       couponNameRequired: "dispNone",
       couponNameHelpText: "dispNone",
+      snackBarOpen: false,
+      snackBarMessage: "",
+      transition: Fade,
     };
   }
 
@@ -497,6 +504,88 @@ class Checkout extends Component {
       xhrCoupon.setRequestHeader("Cache-Control", "no-cache");
       xhrCoupon.send(couponData);
     }
+  };
+
+  getSubTotal = () => {
+    let subTotal = 0;
+    this.state.cartItems.forEach((cartItem) => {
+      subTotal = subTotal + cartItem.totalAmount;
+    });
+    return subTotal;
+  };
+
+  getDiscountAmount = () => {
+    let discountAmount = 0;
+    if (this.state.coupon !== null) {
+      discountAmount = (this.getSubTotal() * this.state.coupon.percent) / 100;
+      return discountAmount;
+    }
+    return discountAmount;
+  };
+
+  getNetAmount = () => {
+    let netAmount = this.getSubTotal() - this.getDiscountAmount();
+    return netAmount;
+  };
+
+  placeOrderButtonClickHandler = () => {
+    let item_quantities = [];
+    this.state.cartItems.forEach((cartItem) => {
+      item_quantities.push({
+        item_id: cartItem.id,
+        price: cartItem.totalAmount,
+        quantity: cartItem.quantity,
+      });
+    });
+    let newOrderData = JSON.stringify({
+      address_id: this.state.selectedAddress,
+      bill: Math.floor(Math.random() * 100),
+      coupon_id: this.state.coupon !== null ? this.state.coupon.id : "",
+      discount: this.getDiscountAmount(),
+      item_quantities: item_quantities,
+      payment_id: this.state.selectedPayment,
+      restaurant_id: this.state.restaurantDetails.id,
+    });
+
+    let that = this;
+    let xhrOrder = new XMLHttpRequest();
+    xhrOrder.addEventListener("readystatechange", function() {
+      if (xhrOrder.readyState === 4) {
+        if (xhrOrder.status === 201) {
+          let responseOrder = JSON.parse(xhrOrder.responseText);
+          that.setState({
+            ...that.state,
+            snackBarOpen: true,
+            snackBarMessage:
+              "Order placed successfully! Your order ID is " + responseOrder.id,
+          });
+        } else {
+          that.setState({
+            ...that.state,
+            snackBarOpen: true,
+            snackBarMessage: "Unable to place your order! Please try again!",
+          });
+        }
+      }
+    });
+    xhrOrder.open("POST", this.props.baseUrl + "order");
+    xhrOrder.setRequestHeader(
+      "authorization",
+      "Bearer " + this.state.accessToken
+    );
+    xhrOrder.setRequestHeader("Content-Type", "application/json");
+    xhrOrder.send(newOrderData);
+  };
+
+  snackBarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    this.setState({
+      ...this.state,
+      snackBarMessage: "",
+      snackBarOpen: false,
+    });
   };
 
   render() {
@@ -887,9 +976,111 @@ class Checkout extends Component {
                     APPLY
                   </Button>
                 </div>
+                <div className="label-amount-container">
+                  <Typography
+                    variant="subtitle2"
+                    component="p"
+                    style={{ color: "grey" }}
+                  >
+                    Sub Total
+                  </Typography>
+                  <div className="amount">
+                    <FontAwesomeIcon
+                      icon="rupee-sign"
+                      style={{ color: "grey" }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      style={{ color: "grey" }}
+                      id="summary-net-amount"
+                    >
+                      {this.getSubTotal().toFixed(2)}
+                    </Typography>
+                  </div>
+                </div>
+                <div className="label-amount-container">
+                  <Typography
+                    variant="subtitle2"
+                    component="p"
+                    className={classes.netAmount}
+                    style={{ color: "grey" }}
+                  >
+                    Discount
+                  </Typography>
+                  <div className="amount">
+                    <FontAwesomeIcon
+                      icon="rupee-sign"
+                      style={{ color: "grey" }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      style={{ color: "grey" }}
+                      id="summary-net-amount"
+                    >
+                      {this.getDiscountAmount().toFixed(2)}
+                    </Typography>
+                  </div>
+                </div>
+                <Divider className={classes.divider} />
+                <div className="label-amount-container">
+                  <Typography
+                    variant="subtitle2"
+                    component="p"
+                    className={classes.netAmount}
+                  >
+                    Net Amount
+                  </Typography>
+                  <div className="amount">
+                    <FontAwesomeIcon
+                      icon="rupee-sign"
+                      style={{ color: "grey" }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      className={classes.itemPrice}
+                      id="summary-net-amount"
+                    >
+                      {this.getNetAmount().toFixed(2)}
+                    </Typography>
+                  </div>
+                </div>
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  fullWidth={true}
+                  className={classes.placeOrderButton}
+                  onClick={this.placeOrderButtonClickHandler}
+                >
+                  PLACE ORDER
+                </Button>
               </CardContent>
             </Card>
           </div>
+        </div>
+        <div>
+          <Snackbar
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+            open={this.state.snackBarOpen}
+            autoHideDuration={4000}
+            onClose={this.snackBarClose}
+            TransitionComponent={this.state.transition}
+            ContentProps={{
+              "aria-describedby": "message-id",
+            }}
+            message={<span id="message-id">{this.state.snackBarMessage}</span>}
+            action={
+              <IconButton color="inherit" onClick={this.snackBarClose}>
+                <CloseIcon />
+              </IconButton>
+            }
+          />
         </div>
       </div>
     );

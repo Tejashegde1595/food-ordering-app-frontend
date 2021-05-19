@@ -15,17 +15,32 @@
     width: 100%;
     padding: 0px;
   }
+
+  .summary-container {
+    width: 100%;
+    margin-top: 5px;
+  }
 }
 
 @media (min-width: 670px) and (max-width: 1200px) {
   .stepper-container {
     width: 60%;
   }
+
+  .summary-container {
+    width: 40%;
+    margin-top: 5px;
+  }
 }
 
 @media screen and (min-width: 1200px) {
   .stepper-container {
     width: 74%;
+  }
+
+  .summary-container {
+    width: 25%;
+    margin-top: 5px;
   }
 }
 

@@ -5,15 +5,13 @@ import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import StepContent from "@material-ui/core/StepContent";
-import {
-  withStyles,
-  Tabs,
-  Tab,
-  IconButton,
-  FormControl,
-  FormHelperText,
-  FormControlLabel,
-} from "@material-ui/core";
+import { withStyles } from "@material-ui/core";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import FormControl from "@material-ui/core/FormControl";
+import IconButton from "@material-ui/core/IconButton";
+import FormHelperText from "@material-ui/core/FormHelperText";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import GridList from "@material-ui/core/GridList";
@@ -28,6 +26,9 @@ import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
 import Paper from "@material-ui/core/Paper";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardContent from "@material-ui/core/CardContent";
 
 const styles = (theme) => ({
   stepper: {
@@ -77,6 +78,23 @@ const styles = (theme) => ({
   resetContainer: {
     padding: theme.spacing(3),
   },
+
+  summaryHeader: {
+    "margin-left": "10px",
+    "margin-right": "10px",
+  },
+
+  restaurantName: {
+    "font-size": "18px",
+    color: "rgb(85,85,85)",
+    margin: "10px 0px 10px 0px",
+  },
+
+  cardContent: {
+    "padding-top": "0px",
+    "margin-left": "10px",
+    "margin-right": "10px",
+  },
 });
 
 const TabContainer = function(props) {
@@ -116,6 +134,9 @@ class Checkout extends Component {
       states: [],
       selectedPayment: "",
       payment: [],
+      restaurantDetails: props.location.restaurantDetails
+        ? props.location.restaurantDetails
+        : { name: null },
     };
   }
 
@@ -674,6 +695,25 @@ class Checkout extends Component {
                 </Button>
               </Paper>
             )}
+          </div>
+          {/* Summary Card */}
+          <div className="summary-container">
+            <Card className={classes.summary}>
+              <CardHeader
+                title="Summary"
+                titleTypographyProps={{ vartiant: "h5" }}
+                className={classes.summaryHeader}
+              />
+              <CardContent className={classes.cardContent}>
+                <Typography
+                  variant="subtitle1"
+                  component="p"
+                  className={classes.restaurantName}
+                >
+                  {this.state.restaurantDetails.name}
+                </Typography>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

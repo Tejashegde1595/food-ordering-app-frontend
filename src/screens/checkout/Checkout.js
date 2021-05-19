@@ -660,6 +660,7 @@ class Checkout extends Component {
                 </Step>
               ))}
             </Stepper>
+            {/* Change button functionality */}
             {this.state.activeStep === this.state.steps.length && (
               <Paper square elevation={0} className={classes.resetContainer}>
                 <Typography>

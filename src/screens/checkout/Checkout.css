@@ -86,3 +86,16 @@
 #summary-net-amount {
   margin-left: 6px;
 }
+
+.dispNone {
+  display: none;
+}
+
+.dispBlock {
+  display: block;
+}
+
+.amount {
+  display: flex;
+  align-items: baseline;
+}

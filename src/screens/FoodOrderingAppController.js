@@ -23,11 +23,6 @@ class FoodOrderingAppController extends Component {
               path="/"
               render={(props) => <Home {...props} baseUrl={this.baseUrl} />}
             />
-            {/* <Route
-              exact
-              path="/checkout"
-              render={(props) => <Checkout {...props} baseUrl={this.baseUrl} />}
-            /> */}
             <Route
               exact
               path="/restaurant/:id"

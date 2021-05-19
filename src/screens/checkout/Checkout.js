@@ -38,6 +38,7 @@ import Divider from "@material-ui/core/Divider";
 import CloseIcon from "@material-ui/icons/Close";
 import Snackbar from "@material-ui/core/Snackbar";
 import Fade from "@material-ui/core/Fade";
+import { Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   stepper: {
@@ -129,6 +130,14 @@ const styles = (theme) => ({
   applyButton: {
     height: "40px",
   },
+
+  placeOrderButton: {
+    "font-weight": "400",
+  },
+
+  divider: {
+    margin: "10px 0px",
+  },
 });
 
 const TabContainer = function(props) {
@@ -148,7 +157,8 @@ class Checkout extends Component {
 
     this.state = {
       activeStep: 0,
-      steps: ["Delivery", "Payment"],
+      // steps: ["Delivery", "Payment"],
+      steps: this.getSteps(),
       value: 0,
       addresses: [],
       noOfColumn: 3,
@@ -179,8 +189,14 @@ class Checkout extends Component {
       snackBarOpen: false,
       snackBarMessage: "",
       transition: Fade,
+      isLoggedIn:
+        sessionStorage.getItem("access-token") === null ? false : true,
     };
   }
+
+  getSteps = () => {
+    return ["Delivery", "Payment"];
+  };
 
   componentDidMount() {
     this.getAllAddress();
@@ -213,6 +229,12 @@ class Checkout extends Component {
     });
     xhrPayment.open("GET", this.props.baseUrl + "payment");
     xhrPayment.send(paymentData);
+
+    window.addEventListener("resize", this.getGridListColumn);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateCardsGridListCols);
   }
 
   getAllAddress = () => {
@@ -588,12 +610,44 @@ class Checkout extends Component {
     });
   };
 
+  getGridListColumn = () => {
+    if (window.innerWidth <= 600) {
+      this.setState({
+        ...this.state,
+        noOfColumn: 2,
+      });
+    } else {
+      this.setState({
+        ...this.state,
+        noOfColumn: 3,
+      });
+    }
+  };
+
+  redirectToHome = () => {
+    if (!this.state.isLoggedIn) {
+      return <Redirect to="/" />;
+    }
+  };
+
+  logoutRedirectToHome = () => {
+    this.setState({
+      ...this.state,
+      isLoggedIn: false,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div>
-        <Header baseUrl={this.props.baseUrl} showHeaderSearchBox={false} />
+        {this.redirectToHome()}
+        <Header
+          baseUrl={this.props.baseUrl}
+          showHeaderSearchBox={false}
+          logoutRedirect={this.logoutRedirectToHome}
+        />
         <div className="checkout-container">
           <div className="stepper-container">
             <Stepper

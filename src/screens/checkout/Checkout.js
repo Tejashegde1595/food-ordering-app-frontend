@@ -353,6 +353,13 @@ class Checkout extends Component {
     return saveAddressFormValid;
   };
 
+  radioChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      selectedPayment: event.target.value,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -602,6 +609,7 @@ class Checkout extends Component {
                             aria-label="payment"
                             name="payment"
                             value={this.state.selectedPayment}
+                            onChange={this.radioChangeHandler}
                           >
                             {this.state.payment.map((payment) => (
                               <FormControlLabel

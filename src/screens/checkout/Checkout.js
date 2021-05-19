@@ -239,6 +239,34 @@ class Checkout extends Component {
     });
   };
 
+  inputLocalityChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      locality: event.target.value,
+    });
+  };
+
+  inputCityChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      city: event.target.value,
+    });
+  };
+
+  selectSelectedStateChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      selectedState: event.target.value,
+    });
+  };
+
+  inputPincodeChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      pincode: event.target.value,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -369,6 +397,7 @@ class Checkout extends Component {
                                 locality={this.state.locality}
                                 fullWidth={true}
                                 value={this.state.locality}
+                                onChange={this.inputLocalityChangeHandler}
                               />
                               <FormHelperText
                                 className={this.state.localityRequired}
@@ -390,6 +419,7 @@ class Checkout extends Component {
                                 city={this.state.city}
                                 fullWidth={true}
                                 value={this.state.city}
+                                onChange={this.inputCityChangeHandler}
                               />
                               <FormHelperText
                                 className={this.state.cityRequired}
@@ -415,6 +445,7 @@ class Checkout extends Component {
                                   },
                                 }}
                                 value={this.state.selectedState}
+                                onChange={this.selectSelectedStateChangeHandler}
                               >
                                 {this.state.states.map((state) => (
                                   <MenuItem value={state.id} key={state.id}>
@@ -441,6 +472,7 @@ class Checkout extends Component {
                                 pincode={this.state.pincode}
                                 fullWidth={true}
                                 value={this.state.pincode}
+                                onChange={this.inputPincodeChangeHandler}
                               />
                               <FormHelperText
                                 className={this.state.pincodeRequired}

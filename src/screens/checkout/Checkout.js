@@ -27,6 +27,7 @@ import Button from "@material-ui/core/Button";
 import FormLabel from "@material-ui/core/FormLabel";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import Radio from "@material-ui/core/Radio";
+import Paper from "@material-ui/core/Paper";
 
 const styles = (theme) => ({
   stepper: {
@@ -71,6 +72,10 @@ const styles = (theme) => ({
   button: {
     marginTop: theme.spacing(2),
     marginRight: theme.spacing(1),
+  },
+
+  resetContainer: {
+    padding: theme.spacing(3),
   },
 });
 
@@ -360,6 +365,13 @@ class Checkout extends Component {
     });
   };
 
+  changeButtonClickHandler = () => {
+    this.setState({
+      ...this.state,
+      activeStep: 0,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -375,7 +387,7 @@ class Checkout extends Component {
             >
               {this.state.steps.map((label, index) => (
                 <Step key={label}>
-                  <StepLabel key={label}></StepLabel>
+                  <StepLabel>{label}</StepLabel>
                   <StepContent>
                     {index === 0 ? (
                       <div className="address-container">
@@ -648,6 +660,19 @@ class Checkout extends Component {
                 </Step>
               ))}
             </Stepper>
+            {this.state.activeStep === this.state.steps.length && (
+              <Paper square elevation={0} className={classes.resetContainer}>
+                <Typography>
+                  View the summary and place your order now!
+                </Typography>
+                <Button
+                  className={classes.button}
+                  onClick={this.changeButtonClickHandler}
+                >
+                  Change
+                </Button>
+              </Paper>
+            )}
           </div>
         </div>
       </div>

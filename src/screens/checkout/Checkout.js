@@ -29,6 +29,11 @@ import Paper from "@material-ui/core/Paper";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "@fortawesome/fontawesome-free-solid";
+import "@fortawesome/fontawesome-svg-core";
+import "@fortawesome/fontawesome-free-regular";
+import FilledInput from "@material-ui/core/FilledInput";
 
 const styles = (theme) => ({
   stepper: {
@@ -95,6 +100,31 @@ const styles = (theme) => ({
     "margin-left": "10px",
     "margin-right": "10px",
   },
+
+  menuItemName: {
+    "margin-left": "10px",
+    color: "grey",
+  },
+
+  itemQuantity: {
+    "margin-left": "auto",
+    "margin-right": "30px",
+    color: "grey",
+  },
+
+  couponInput: {
+    width: "200px",
+    "@media(min-width:1300px)": {
+      width: "250px",
+    },
+    "@media(max-width:600px)": {
+      width: "200px",
+    },
+  },
+
+  applyButton: {
+    height: "40px",
+  },
 });
 
 const TabContainer = function(props) {
@@ -137,6 +167,11 @@ class Checkout extends Component {
       restaurantDetails: props.location.restaurantDetails
         ? props.location.restaurantDetails
         : { name: null },
+      cartItems: props.location.cartItems ? props.location.cartItems : [],
+      coupon: null,
+      couponName: "",
+      couponNameRequired: "dispNone",
+      couponNameHelpText: "dispNone",
     };
   }
 
@@ -157,6 +192,20 @@ class Checkout extends Component {
     });
     xhrStates.open("GET", this.props.baseUrl + "states");
     xhrStates.send(statesData);
+
+    let paymentData = null;
+    let xhrPayment = new XMLHttpRequest();
+    xhrPayment.addEventListener("readystatechange", function() {
+      if (xhrPayment.readyState === 4 && xhrPayment.status === 200) {
+        let payment = JSON.parse(xhrPayment.responseText).paymentMethods;
+        that.setState({
+          ...that.state,
+          payment: payment,
+        });
+      }
+    });
+    xhrPayment.open("GET", this.props.baseUrl + "payment");
+    xhrPayment.send(paymentData);
   }
 
   getAllAddress = () => {
@@ -391,6 +440,63 @@ class Checkout extends Component {
       ...this.state,
       activeStep: 0,
     });
+  };
+
+  inputCouponNameChangeHandler = (event) => {
+    this.setState({
+      ...this.state,
+      couponName: event.target.value,
+    });
+  };
+
+  applyButtonClickHandler = () => {
+    let isCouponNameValid = true;
+    let couponNameRequired = "dispNone";
+    let couponNameHelpText = "dispNone";
+    if (this.state.couponName === "") {
+      isCouponNameValid = false;
+      couponNameRequired = "dispBlock";
+      this.setState({
+        couponNameRequired: couponNameRequired,
+        couponNameHelpText: couponNameHelpText,
+      });
+    }
+    if (isCouponNameValid) {
+      let couponData = null;
+      let that = this;
+      let xhrCoupon = new XMLHttpRequest();
+      xhrCoupon.addEventListener("readystatechange", function() {
+        if (xhrCoupon.readyState === 4) {
+          if (xhrCoupon.status === 200) {
+            let coupon = JSON.parse(xhrCoupon.responseText);
+            that.setState({
+              ...that.state,
+              coupon: coupon,
+              couponNameRequired: "dispNone",
+              couponNameHelpText: "dispNone",
+            });
+          } else {
+            that.setState({
+              ...that.state,
+              couponNameHelpText: "dispBlock",
+              couponNameRequired: "dispNone",
+            });
+          }
+        }
+      });
+
+      xhrCoupon.open(
+        "GET",
+        this.props.baseUrl + "/order/coupon/" + this.state.couponName
+      );
+      xhrCoupon.setRequestHeader(
+        "authorization",
+        "Bearer " + this.state.accessToken
+      );
+      xhrCoupon.setRequestHeader("Content-Type", "application/json");
+      xhrCoupon.setRequestHeader("Cache-Control", "no-cache");
+      xhrCoupon.send(couponData);
+    }
   };
 
   render() {
@@ -701,7 +807,7 @@ class Checkout extends Component {
             <Card className={classes.summary}>
               <CardHeader
                 title="Summary"
-                titleTypographyProps={{ vartiant: "h5" }}
+                titleTypographyProps={{ variant: "h5" }}
                 className={classes.summaryHeader}
               />
               <CardContent className={classes.cardContent}>
@@ -712,6 +818,75 @@ class Checkout extends Component {
                 >
                   {this.state.restaurantDetails.name}
                 </Typography>
+                {this.state.cardItems.map((cartItem) => (
+                  <div className="menu-item-container" key={cartItem.id}>
+                    <FontAwesomeIcon
+                      icon="stop-circle"
+                      style={{
+                        color:
+                          cartItem.itemType === "NON_VEG"
+                            ? "#BE4A47"
+                            : "#5A9A5B",
+                      }}
+                    />
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      className={classes.menuItemName}
+                      id="summary-menu-item-name"
+                    >
+                      {cartItem.name[0].toUpperCase() + cartItem.name.slice(1)}
+                    </Typography>
+                    <Typography
+                      variant="subtitle1"
+                      component="p"
+                      className={classes.itemQuantity}
+                    >
+                      {cartItem.quantity}
+                    </Typography>
+                    <div className="summary-item-price-container">
+                      <FontAwesomeIcon
+                        icon="rupee-sign"
+                        style={{ color: "grey" }}
+                      />
+                      <Typography
+                        variant="subtitle1"
+                        component="p"
+                        className={classes.itemPrice}
+                        id="summary-item-price"
+                      >
+                        {cartItem.totalAmount.toFixed(2)}
+                      </Typography>
+                    </div>
+                  </div>
+                ))}
+                <div className="coupon-container">
+                  <FormControl className={classes.formControlCoupon}>
+                    <InputLabel htmlFor="coupon">Coupon Code</InputLabel>
+                    <FilledInput
+                      id="coupon"
+                      className={classes.couponInput}
+                      value={this.state.couponName}
+                      placeholder="Ex: FLAT30"
+                      onChange={this.inputCouponNameChangeHandler}
+                    />
+                    <FormHelperText className={this.state.couponNameRequired}>
+                      <span className="red">Required</span>
+                    </FormHelperText>
+                    <FormHelperText className={this.state.couponNameHelpText}>
+                      <span className="red">invalid coupon</span>
+                    </FormHelperText>
+                  </FormControl>
+                  <Button
+                    variant="contained"
+                    color="default"
+                    className={classes.applyButton}
+                    size="small"
+                    onClick={this.applyButtonClickHandler}
+                  >
+                    APPLY
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>

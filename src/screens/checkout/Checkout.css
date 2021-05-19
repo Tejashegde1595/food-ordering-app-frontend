@@ -53,3 +53,25 @@
 .grid-list-tile-container {
   padding: 16px 8px 16px 16px;
 }
+
+.menu-item-container {
+  display: flex;
+  align-items: center;
+}
+
+.summary-item-price-container {
+  display: flex;
+  align-items: baseline;
+  color: grey;
+}
+
+#summary-item-price {
+  margin-left: 6px;
+}
+
+.coupon-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px 0px;
+}

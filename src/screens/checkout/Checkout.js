@@ -267,6 +267,92 @@ class Checkout extends Component {
     });
   };
 
+  saveAddressClickHandler = () => {
+    if (this.saveAddressFormValid()) {
+      let newAddressData = JSON.stringify({
+        city: this.state.city,
+        flat_building_name: this.state.flatBuildingName,
+        locality: this.state.locality,
+        pincode: this.state.pincode,
+        state_uuid: this.state.selectedState,
+      });
+
+      let xhrSaveAddress = new XMLHttpRequest();
+      let that = this;
+
+      xhrSaveAddress.addEventListener("readystatechange", function() {
+        if (xhrSaveAddress.readyState === 4 && xhrSaveAddress.status === 201) {
+          that.setState({
+            ...that.state,
+            value: 0,
+          });
+          that.getAllAddress();
+        }
+      });
+
+      xhrSaveAddress.open("POST", this.props.baseUrl + "address");
+      xhrSaveAddress.setRequestHeader(
+        "authorization",
+        "Bearer " + this.state.accessToken
+      );
+      xhrSaveAddress.setRequestHeader("Content-Type", "application/json");
+      xhrSaveAddress.send(newAddressData);
+    }
+  };
+
+  saveAddressFormValid = () => {
+    let flatBuildingNameRequired = "dispNone";
+    let cityRequired = "dispNone";
+    let localityRequired = "dispNone";
+    let stateRequired = "dispNone";
+    let pincodeRequired = "dispNone";
+    let pincodeHelpText = "dispNone";
+    let saveAddressFormValid = true;
+
+    if (this.state.flatBuildingName === "") {
+      flatBuildingNameRequired = "dispBlock";
+      saveAddressFormValid = false;
+    }
+
+    if (this.state.locality === "") {
+      localityRequired = "dispBlock";
+      saveAddressFormValid = false;
+    }
+
+    if (this.state.selectedState === "") {
+      stateRequired = "dispBlock";
+      saveAddressFormValid = false;
+    }
+
+    if (this.state.city === "") {
+      cityRequired = "dispBlock";
+      saveAddressFormValid = false;
+    }
+
+    if (this.state.pincode === "") {
+      pincodeRequired = "dispBlock";
+      saveAddressFormValid = false;
+    }
+    if (this.state.pincode !== "") {
+      var pincodePattern = /^\d{6}$/;
+      if (!this.state.pincode.match(pincodePattern)) {
+        pincodeHelpText = "dispBlock";
+        saveAddressFormValid = false;
+      }
+    }
+    this.setState({
+      ...this.state,
+      flatBuildingNameRequired: flatBuildingNameRequired,
+      cityRequired: cityRequired,
+      localityRequired: localityRequired,
+      stateRequired: stateRequired,
+      pincodeRequired: pincodeRequired,
+      pincodeHelpText: pincodeHelpText,
+    });
+
+    return saveAddressFormValid;
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -495,6 +581,7 @@ class Checkout extends Component {
                               variant="contained"
                               className={classes.formButton}
                               color="secondary"
+                              onClick={this.saveAddressClickHandler}
                             >
                               SAVE ADDRESS
                             </Button>

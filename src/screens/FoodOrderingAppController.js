@@ -25,7 +25,7 @@ class FoodOrderingAppController extends Component {
               path="/restaurant/:id"
               render={(props) => <Details {...props} baseUrl={this.baseUrl} />}
             />
-            {/*   <PrivateRoute
+          {/*   <PrivateRoute
               exact
               path="/profile"
               component={Profile}

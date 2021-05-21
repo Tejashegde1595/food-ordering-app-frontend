@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import PrivateRoute from "../common/Route";
 import Home from "../screens/home/Home";
+import Checkout from "../screens/checkout/Checkout";
 import Details from "../screens/details/Details";
 class FoodOrderingAppController extends Component {
   constructor() {
@@ -25,18 +27,18 @@ class FoodOrderingAppController extends Component {
               path="/restaurant/:id"
               render={(props) => <Details {...props} baseUrl={this.baseUrl} />}
             />
-          {/*   <PrivateRoute
+            {/* <PrivateRoute
               exact
               path="/profile"
               component={Profile}
               baseUrl={this.baseUrl}
-            />
+            /> */}
             <PrivateRoute
               exact
               path="/checkout"
               component={Checkout}
               baseUrl={this.baseUrl}
-            /> */}
+            />
           </Switch>
         </div>
       </Router>

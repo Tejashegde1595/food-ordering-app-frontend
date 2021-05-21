@@ -17,6 +17,8 @@ import "@fortawesome/fontawesome-free-regular";
 import "./Details.css";
 import Divider from "@material-ui/core/Divider";
 import AddIcon from "@material-ui/icons/Add";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
     textRatingCost: {
@@ -188,6 +190,31 @@ class Details extends Component{
   }
 
   checkOutButtonClickHandler = () => {
+    let cartItems = this.state.cartItems;
+    let isLoggedIn =
+      sessionStorage.getItem("access-token") == null ? false : true;
+    if (cartItems.length === 0) {
+      //Checking if cart is empty
+      this.setState({
+        ...this.state,
+        snackBarOpen: true,
+        snackBarMessage: "Please add an item to your cart!",
+      });
+    } else if (!isLoggedIn) {
+      //Checking if customer is not loggedIn.
+      this.setState({
+        ...this.state,
+        snackBarOpen: true,
+        snackBarMessage: "Please login first!",
+      });
+    } else {
+      //If all the condition are satisfied user pushed to the checkout screen
+      this.props.history.push({
+        pathname: "/checkout",
+        cartItems: this.state.cartItems,
+        restaurantDetails: this.state.restaurantDetails,
+      });
+    }
   }
 
   addButtonClickHandler = (item) => {
@@ -500,9 +527,27 @@ class Details extends Component{
                     </Card>
                 </div>
                 </div>
-                {/** Item cards **/}
-              
-
+                <div>
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  open={this.state.snackBarOpen}
+                  autoHideDuration={4000}
+                  onClose={this.snackBarClose}
+                  TransitionComponent={this.state.transition}
+                  ContentProps={{
+                    "aria-describedby": "message-id",
+                  }}
+                  message={<span id="message-id">{this.state.snackBarMessage}</span>}
+                  action={
+                    <IconButton color="inherit" onClick={this.snackBarClose}>
+                      <CloseIcon />
+                    </IconButton>
+                  }
+                />
+              </div>             
             </div>
         )
     }

@@ -93,7 +93,7 @@ class Home extends Component {
         super(props);
         this.state = {
             restaurantList: [],
-            restaurantAllData:[]
+            allRestaurantData:[]
         };
     }
 
@@ -105,7 +105,7 @@ class Home extends Component {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 that.setState({
                     restaurantList: JSON.parse(this.responseText).restaurants,
-                    restaurantAllData: JSON.parse(this.responseText).restaurants
+                    allRestaurantData: JSON.parse(this.responseText).restaurants
                 });
             }
         });
@@ -116,24 +116,15 @@ class Home extends Component {
     }
 
     updateSearchRestaurant = (searchRestaurant, searchOn) => {
-        let allRestaurantData = [];
         if (searchOn) {
-            if (!this.state.isSearchOn) {
-                allRestaurantData = this.state.restaurantList;
-                this.setState({
-                    restaurantList: searchRestaurant,
-                    allRestaurantData: allRestaurantData,
-                });
-            } else {
-                this.setState({
-                    ...this.state,
-                    restaurantList: searchRestaurant,
-                });
-            }
-        } else {
-            allRestaurantData = this.state.restaurantAllData;
             this.setState({
-                restaurantList: allRestaurantData,
+                ...this.state,
+                restaurantList: searchRestaurant,
+            });
+
+        } else {
+            this.setState({
+                restaurantList: this.state.allRestaurantData,
             });
         }
     };

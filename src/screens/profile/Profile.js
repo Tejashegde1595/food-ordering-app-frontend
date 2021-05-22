@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
-import './Profile.css';
-import Header from '../../common/header/Header';
+import React, { Component } from "react";
+import "./Profile.css";
 
 class Profile extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
   render() {
-    return (
-      <div>
-        {/** Header component included here */}
-        <Header />
-
-        Profile Page
-      </div>
-    )
+    return <div>My Profile Page</div>;
   }
 }
 

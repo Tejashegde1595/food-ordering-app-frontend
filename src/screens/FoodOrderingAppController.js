@@ -34,7 +34,7 @@ class FoodOrderingAppController extends Component {
               path="/profile"
               component={Profile}
               baseUrl={this.baseUrl}
-            />
+            /> 
             <PrivateRoute
               exact
               path="/checkout"

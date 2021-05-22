@@ -961,7 +961,7 @@ class Checkout extends Component {
                 >
                   {this.state.restaurantDetails.name}
                 </Typography>
-                {this.state.cardItems.map((cartItem) => (
+                {this.state.cartItems.map((cartItem) => (
                   <div className="menu-item-container" key={cartItem.id}>
                     <FontAwesomeIcon
                       icon="stop-circle"

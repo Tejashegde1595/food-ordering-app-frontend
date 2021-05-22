@@ -62,13 +62,13 @@ const styles = (theme) => ({
     categories: {
         "font-size": "16px",
         "@media (min-width: 1300px)": {
-            "font-size": "22px",
+            "font-size": "15px",
         },
         "@media (min-width: 960px) and (max-width:1300px)": {
             "font-size": "20px",
         },
         "@media (max-width: 960px)": {
-            "font-size": "22px",
+            "font-size": "15px",
         },
     },
     cardContent: {
@@ -93,6 +93,7 @@ class Home extends Component {
         super(props);
         this.state = {
             restaurantList: [],
+            restaurantAllData:[]
         };
     }
 
@@ -104,6 +105,7 @@ class Home extends Component {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 that.setState({
                     restaurantList: JSON.parse(this.responseText).restaurants,
+                    restaurantAllData: JSON.parse(this.responseText).restaurants
                 });
             }
         });
@@ -129,7 +131,7 @@ class Home extends Component {
                 });
             }
         } else {
-            allRestaurantData = this.state.allRestaurantData;
+            allRestaurantData = this.state.restaurantAllData;
             this.setState({
                 restaurantList: allRestaurantData,
             });

@@ -4,6 +4,8 @@ import PrivateRoute from "../common/Route";
 import Home from "../screens/home/Home";
 import Checkout from "../screens/checkout/Checkout";
 import Details from "../screens/details/Details";
+import Profile from "../screens/profile/Profile";
+
 class FoodOrderingAppController extends Component {
   constructor() {
     super();
@@ -27,12 +29,12 @@ class FoodOrderingAppController extends Component {
               path="/restaurant/:id"
               render={(props) => <Details {...props} baseUrl={this.baseUrl} />}
             />
-            {/* <PrivateRoute
+             <PrivateRoute
               exact
               path="/profile"
               component={Profile}
               baseUrl={this.baseUrl}
-            /> */}
+            /> 
             <PrivateRoute
               exact
               path="/checkout"

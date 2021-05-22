@@ -93,6 +93,7 @@ class Home extends Component {
         super(props);
         this.state = {
             restaurantList: [],
+            restaurantAllData:[]
         };
     }
 
@@ -104,6 +105,7 @@ class Home extends Component {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 that.setState({
                     restaurantList: JSON.parse(this.responseText).restaurants,
+                    restaurantAllData: JSON.parse(this.responseText).restaurants
                 });
             }
         });
@@ -129,7 +131,7 @@ class Home extends Component {
                 });
             }
         } else {
-            allRestaurantData = this.state.allRestaurantData;
+            allRestaurantData = this.state.restaurantAllData;
             this.setState({
                 restaurantList: allRestaurantData,
             });

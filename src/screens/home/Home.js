@@ -15,6 +15,7 @@ const styles = (theme) => ({
         flexGrow: 1,
         backgroundColor: theme.palette.background.paper,
     },
+    //style to display grid
     grid: {
         padding: "20px",
         "margin-left": "0.5%",
@@ -22,6 +23,7 @@ const styles = (theme) => ({
         transform: "translateZ(0)",
         cursor: "pointer",
     },
+    //style to display grid card
     gridCard: {
         "@media (min-width: 1200px)": {
             "flex-grow": "0",
@@ -34,6 +36,7 @@ const styles = (theme) => ({
             "flex-basis": "33%",
         },
     },
+    //style to display card
     card: {
         height: "500px",
         "@media (min-width: 1300px)": {
@@ -47,6 +50,7 @@ const styles = (theme) => ({
         height: "40%",
         width: "100%",
     },
+    //style to display title
     title: {
         "font-size": "25px",
         "@media (min-width: 1300px)": {
@@ -59,6 +63,7 @@ const styles = (theme) => ({
             "font-size": "40px",
         },
     },
+    //style to display categories
     categories: {
         "font-size": "16px",
         "@media (min-width: 1300px)": {
@@ -71,6 +76,7 @@ const styles = (theme) => ({
             "font-size": "15px",
         },
     },
+     //style to display card content
     cardContent: {
         padding: "10px",
         "margin-left": "20px",
@@ -79,6 +85,7 @@ const styles = (theme) => ({
         display: "flex",
         "align-items": "center",
     },
+     //style to display card Action
     cardActionArea: {
         display: "flex",
         height: "100%",
@@ -95,7 +102,9 @@ class Home extends Component {
             restaurantList: []
         };
     }
-
+    /*
+    get all the restaurants at the time of page load
+    */
     componentDidMount() {
         let data = null;
         let xhr = new XMLHttpRequest();
@@ -112,14 +121,18 @@ class Home extends Component {
         xhr.setRequestHeader("Cache-Control", "no-cache");
         xhr.send(data);
     }
-
+    /*
+    update search restaurant based on the search
+    */
     updateSearchRestaurant = (searchRestaurant) => {
             this.setState({
                 ...this.state,
                 restaurantList: searchRestaurant
             });
     };
-
+    /*
+    navigate to restaurant details page on click of restaurant
+    */
     restaurantCardClickHandler = (restaurantId) => {
         this.props.history.push("/restaurant/" + restaurantId);
     };

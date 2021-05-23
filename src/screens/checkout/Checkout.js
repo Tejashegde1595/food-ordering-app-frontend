@@ -287,6 +287,11 @@ class Checkout extends Component {
   tabsChangeHandler = (event, value) => {
     this.setState({
       value,
+      flatBuildingName: "",
+      locality: "",
+      city: "",
+      selectedState: "",
+      pincode: "",
     });
   };
 

@@ -762,7 +762,7 @@ class Checkout extends Component {
                             </FormControl>
                             <br />
                             <br />
-                            <FormControl className={classes.formControl}>
+                            <FormControl required className={classes.formControl}>
                               <InputLabel htmlFor="locality">
                                 Locality
                               </InputLabel>

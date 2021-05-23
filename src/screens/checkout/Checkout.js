@@ -138,6 +138,15 @@ const styles = (theme) => ({
   divider: {
     margin: "10px 0px",
   },
+
+  gridListTile: {
+    textAlign: "left",
+    margin: "30px 0px 20px 0px",
+    "border-style": "solid",
+    "border-width": "0.5px 3px 3px 0.5px",
+    "border-radius": "10px",
+    padding: "8px",
+  },
 });
 
 const TabContainer = function(props) {
@@ -198,7 +207,7 @@ class Checkout extends Component {
   };
 
   componentDidMount() {
-    if(this.state.isLoggedIn) {
+    if (this.state.isLoggedIn) {
       this.getAllAddress();
 
       let statesData = null;
@@ -238,6 +247,7 @@ class Checkout extends Component {
     window.removeEventListener("resize", this.updateCardsGridListCols);
   }
 
+  // Method to fetch all addresses of a customer
   getAllAddress = () => {
     let data = null;
     let that = this;
@@ -276,15 +286,11 @@ class Checkout extends Component {
 
   tabsChangeHandler = (event, value) => {
     this.setState({
-      flatBuildingName: "",
-      locality: "",
-      city: "",
-      selectedState: "",
-      pincode: "",
       value,
     });
   };
 
+  // Function to handle when Next button is clicked
   nextButtonClickHandler = () => {
     if (this.state.value === 0) {
       if (this.state.selectedAddress !== "") {
@@ -315,6 +321,7 @@ class Checkout extends Component {
     }
   };
 
+  // Function to handle when Back button is clicked
   backButtonClickHandler = () => {
     let activeStep = this.state.activeStep;
     activeStep--;
@@ -324,6 +331,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle the Address selection event
   addressSelectedClickHandler = (addressId) => {
     let addresses = this.state.addresses;
     let selectedAddress = "";
@@ -342,6 +350,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle flat name change event
   inputFlatBuildingNameChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -349,6 +358,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle locality change event
   inputLocalityChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -356,6 +366,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle city change event
   inputCityChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -363,6 +374,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle state selection event
   selectSelectedStateChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -370,6 +382,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle Pincode change event
   inputPincodeChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -377,6 +390,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to call when Save Address button is clicked
   saveAddressClickHandler = () => {
     if (this.saveAddressFormValid()) {
       let newAddressData = JSON.stringify({
@@ -410,6 +424,7 @@ class Checkout extends Component {
     }
   };
 
+  // Address form validation
   saveAddressFormValid = () => {
     let flatBuildingNameRequired = "dispNone";
     let cityRequired = "dispNone";
@@ -463,6 +478,7 @@ class Checkout extends Component {
     return saveAddressFormValid;
   };
 
+  // Radio button selection even handler
   radioChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -470,6 +486,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle when Change button is clicked
   changeButtonClickHandler = () => {
     this.setState({
       ...this.state,
@@ -477,6 +494,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to handle Coupn name change event
   inputCouponNameChangeHandler = (event) => {
     this.setState({
       ...this.state,
@@ -484,6 +502,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to call when Apply button is clicked
   applyButtonClickHandler = () => {
     let isCouponNameValid = true;
     let couponNameRequired = "dispNone";
@@ -534,6 +553,7 @@ class Checkout extends Component {
     }
   };
 
+  // Function to calculate SubTotal
   getSubTotal = () => {
     let subTotal = 0;
     this.state.cartItems.forEach((cartItem) => {
@@ -542,6 +562,7 @@ class Checkout extends Component {
     return subTotal;
   };
 
+  // Function to calculate Discount
   getDiscountAmount = () => {
     let discountAmount = 0;
     if (this.state.coupon !== null) {
@@ -551,11 +572,13 @@ class Checkout extends Component {
     return discountAmount;
   };
 
+  // Function to calculate Net Amount
   getNetAmount = () => {
     let netAmount = this.getSubTotal() - this.getDiscountAmount();
     return netAmount;
   };
 
+  // Function to call when Place Order button is clicked
   placeOrderButtonClickHandler = () => {
     let item_quantities = [];
     this.state.cartItems.forEach((cartItem) => {
@@ -605,6 +628,7 @@ class Checkout extends Component {
     xhrOrder.send(newOrderData);
   };
 
+  // Function to handle close snackbar event
   snackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -616,6 +640,7 @@ class Checkout extends Component {
     });
   };
 
+  // Function to set display grid
   getGridListColumn = () => {
     if (window.innerWidth <= 600) {
       this.setState({
@@ -630,12 +655,14 @@ class Checkout extends Component {
     }
   };
 
+  // Function to redirect to Home Page
   redirectToHome = () => {
     if (!this.state.isLoggedIn) {
       return <Redirect to="/" />;
     }
   };
 
+  // Function to set user state
   logoutRedirectToHome = () => {
     this.setState({
       ...this.state,
@@ -648,7 +675,9 @@ class Checkout extends Component {
 
     return (
       <div>
+        {/* Check for logged in user */}
         {this.redirectToHome()}
+        {/* Header Component */}
         <Header
           baseUrl={this.props.baseUrl}
           showHeaderSearchBox={false}
@@ -768,7 +797,7 @@ class Checkout extends Component {
                             </FormControl>
                             <br />
                             <br />
-                            <FormControl required className={classes.formControl}>
+                            <FormControl className={classes.formControl}>
                               <InputLabel htmlFor="locality">
                                 Locality
                               </InputLabel>
@@ -1122,6 +1151,7 @@ class Checkout extends Component {
           </div>
         </div>
         <div>
+          {/* Snackbar functionality */}
           <Snackbar
             anchorOrigin={{
               vertical: "bottom",

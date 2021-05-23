@@ -275,6 +275,11 @@ class Checkout extends Component {
 
   tabsChangeHandler = (event, value) => {
     this.setState({
+      flatBuildingName: "",
+      locality: "",
+      city: "",
+      selectedState: "",
+      pincode: "",
       value,
     });
   };
@@ -762,7 +767,7 @@ class Checkout extends Component {
                             </FormControl>
                             <br />
                             <br />
-                            <FormControl className={classes.formControl}>
+                            <FormControl required className={classes.formControl}>
                               <InputLabel htmlFor="locality">
                                 Locality
                               </InputLabel>

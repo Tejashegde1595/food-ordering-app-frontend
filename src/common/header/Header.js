@@ -21,7 +21,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import {Link} from "react-router-dom";
-
+/* styles for signUp and login Modal */
 const customStyles = {
     content: {
         top: "50%",
@@ -33,6 +33,9 @@ const customStyles = {
     },
 };
 
+/*
+TabContainer componenet to house login and signup
+*/
 const TabContainer = (props) => {
     return (
         <Typography component="div" style={{padding: "0px", textAlign: "center"}}>
@@ -76,7 +79,9 @@ class Header extends Component {
             anchorE1: null,
         };
     }
-
+    /*
+    handler to open login and sign up modal
+    */
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
@@ -87,6 +92,9 @@ class Header extends Component {
         }
     };
 
+    /*
+    handler to close login and sign up modal
+    */
     closeModalHandler = () => {
         this.setState({
             modalIsOpen: false,
@@ -115,14 +123,19 @@ class Header extends Component {
             this.props.changeBadgeVisibility();
         }
     };
-
+    /*
+    Handler to mantain tab change
+    */
     tabChangeHandler = (event, value) => {
         this.setState({
             value,
         });
     };
-
+    /*
+    Handler for login user
+    */
     loginClickHandler = () => {
+        let error= false;
         this.state.loginContactNumber === ""
             ? this.setState({loginContactNumberRequired: "dispBlock"})
             : this.setState({loginContactNumberRequired: "dispNone"});
@@ -136,6 +149,7 @@ class Header extends Component {
                 loginContactNumberRequired: "dispBlock",
                 loginContactError: "required",
             });
+            error= true;
         } else if (
             this.state.loginContactNumber.toString().match(/^(?=.*\d).{10,10}$/i) ===
             null
@@ -144,6 +158,7 @@ class Header extends Component {
             this.setState({
                 loginContactError: "Invalid Contact",
             });
+            error= true;
         } else {
             this.setState({loginContactNumberRequired: "dispNone"});
             this.setState({loginContactError: ""});
@@ -155,6 +170,7 @@ class Header extends Component {
                 loginPasswordRequired: "dispBlock",
                 loginPasswordError: "required",
             });
+            error= true;
         } else {
             this.setState({
                 loginPasswordRequired: "dispNone",
@@ -162,10 +178,7 @@ class Header extends Component {
             });
         }
 
-        if (
-            this.state.loginContactNumber === "" ||
-            this.state.loginPassword === ""
-        ) {
+        if (error) {
             return;
         }
 
@@ -211,15 +224,24 @@ class Header extends Component {
         xhrLogin.send(dataLogin);
     };
 
+    /*
+    handler to set the change in contact number
+    */
     loginContactNumberChangeHandler = (e) => {
         this.setState({loginContactNumber: e.target.value});
     };
-
+    /*
+    handler to set the change in password 
+    */
     loginPasswordChangeHandler = (e) => {
         this.setState({loginPassword: e.target.value});
     };
 
+    /*
+    handler for sign up
+    */
     signUpClickHandler = () => {
+        let error= false;
         this.state.firstName === ""
             ? this.setState({firstNameRequired: "dispBlock"})
             : this.setState({firstNameRequired: "dispNone"});
@@ -239,6 +261,7 @@ class Header extends Component {
                 emailRequired: "dispBlock",
                 emailError: "required",
             });
+            error=true;
         } else if (
             this.state.email
                 .toString()
@@ -246,6 +269,7 @@ class Header extends Component {
         ) {
             this.setState({emailRequired: "dispBlock"});
             this.setState({emailError: "Invalid Email"});
+            error=true;
         } else {
             this.setState({emailRequired: "dispNone"});
             this.setState({emailError: ""});
@@ -255,6 +279,7 @@ class Header extends Component {
         if (this.state.signupPassword === "") {
             this.setState({signupPasswordRequired: "dispBlock"});
             this.setState({signupPasswordError: "required"});
+            error=true;
         } else if (
             this.state.signupPassword
                 .toString()
@@ -265,6 +290,7 @@ class Header extends Component {
                 signupPasswordError:
                     "Password must contain at least one capital letter, one small letter, one number, and one special character",
             });
+            error=true;
         } else {
             this.setState({signupPasswordRequired: "dispNone"});
             this.setState({signupPasswordError: ""});
@@ -274,7 +300,7 @@ class Header extends Component {
         if (this.state.signupContactNumber === "") {
             this.setState({signupContactNumberRequired: "dispBlock"});
             this.setState({signupContactNumberError: "required"});
-            return;
+            error=true;
         } else if (
             this.state.signupContactNumber.toString().match(/^(?=.*\d).{10,10}$/i) ===
             null
@@ -284,18 +310,14 @@ class Header extends Component {
                 signupContactNumberError:
                     "Contact No. must contain only numbers and must be 10 digits long",
             });
+            error=true;
         } else {
             this.setState({signupContactNumberRequired: "dispNone"});
             this.setState({signupContactNumberError: ""});
         }
 
-        if (
-            this.state.email === "" ||
-            this.state.firstName === "" ||
-            this.state.lastName === "" ||
-            this.state.signupContactNumber === "" ||
-            this.state.signupPassword === ""
-        ) {
+        if (error)
+         {
             return;
         }
 
@@ -331,22 +353,38 @@ class Header extends Component {
         xhrSignup.send(dataSignup);
     };
 
+    /*
+    handler to set the change in firstName 
+    */
     firstNameChangeHandler = (e) => {
         this.setState({firstName: e.target.value});
     };
 
+    /*
+    handler to set the change in lastname 
+    */
     lastNameChangeHandler = (e) => {
         this.setState({lastName: e.target.value});
     };
 
+    
+    /*
+    handler to set the change in email 
+    */
     emailChangeHandler = (e) => {
         this.setState({email: e.target.value});
     };
 
+    /*
+    handler to set the change in signup password 
+    */
     signupPasswordChangeHandler = (e) => {
         this.setState({signupPassword: e.target.value});
     };
 
+    /*
+    handler to set the change in signup contact number 
+    */
     signupContactNumberChangeHandler = (e) => {
         this.setState({signupContactNumber: e.target.value});
     };
@@ -360,18 +398,30 @@ class Header extends Component {
         this.setState({snackBarOpen: true});
     };
 
+    /*
+    handler to handle menu
+    */
     handleMenu = (event) => {
         this.setState({anchorEl: event.currentTarget});
     };
 
+    /*
+    handler to handle close menu
+    */
     handleClose = () => {
         this.setState({anchorEl: null});
     };
 
+    /*
+    handler for click of Profile Menu
+    */
     handleProfileMenuClick = () => {
         this.setState({anchorEl: null});
     };
 
+    /*
+    handler for logout
+    */
     handleLogoutMenuClick = () => {
         this.setState({anchorEl: null});
 
@@ -399,20 +449,21 @@ class Header extends Component {
         xhrLogout.send(logoutData);
     };
 
+    
+    /*
+    handler for input Search Change
+    */
     inputSearchChangeHandler = (event) => {
-        let searchOn = true;
+        let that = this;
+        let xhrSearchRestaurant = new XMLHttpRequest();
         if (!(event.target.value === "")) {
-            let dataRestaurant = null;
-            let that = this;
-            let xhrSearchRestaurant = new XMLHttpRequest();
-
             xhrSearchRestaurant.addEventListener("readystatechange", function () {
                 if (
                     xhrSearchRestaurant.readyState === 4 &&
                     xhrSearchRestaurant.status === 200
                 ) {
                     var restaurant = JSON.parse(this.responseText).restaurants;
-                    that.props.updateSearchRestaurant(restaurant, searchOn);
+                    that.props.updateSearchRestaurant(restaurant);
                 }
             });
 
@@ -422,11 +473,18 @@ class Header extends Component {
             );
             xhrSearchRestaurant.setRequestHeader("Content-Type", "application/json");
             xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
-            xhrSearchRestaurant.send(dataRestaurant);
+            xhrSearchRestaurant.send();
         } else {
-            let restaurant = [];
-            searchOn = false;
-            this.props.updateSearchRestaurant(restaurant, searchOn);
+            xhrSearchRestaurant.addEventListener("readystatechange", function() {
+                if (xhrSearchRestaurant.readyState === 4 && xhrSearchRestaurant.status === 200) {
+                    var restaurant = JSON.parse(this.responseText).restaurants;
+                    that.props.updateSearchRestaurant(restaurant);
+                }
+            });
+
+            xhrSearchRestaurant.open("GET", this.props.baseUrl + "restaurant");
+            xhrSearchRestaurant.setRequestHeader("Cache-Control", "no-cache");
+            xhrSearchRestaurant.send();
         }
     };
 

@@ -33,6 +33,9 @@ const customStyles = {
     },
 };
 
+/*
+TabContainer componenet to house login and signup
+*/
 const TabContainer = (props) => {
     return (
         <Typography component="div" style={{padding: "0px", textAlign: "center"}}>
@@ -76,7 +79,9 @@ class Header extends Component {
             anchorE1: null,
         };
     }
-
+    /*
+    handler to open login and sign up modal
+    */
     openModalHandler = () => {
         this.setState({
             modalIsOpen: true,
@@ -87,6 +92,9 @@ class Header extends Component {
         }
     };
 
+    /*
+    handler to close login and sign up modal
+    */
     closeModalHandler = () => {
         this.setState({
             modalIsOpen: false,
@@ -115,13 +123,17 @@ class Header extends Component {
             this.props.changeBadgeVisibility();
         }
     };
-
+    /*
+    Handler to mantain tab change
+    */
     tabChangeHandler = (event, value) => {
         this.setState({
             value,
         });
     };
-
+    /*
+    Handler for login user
+    */
     loginClickHandler = () => {
         let error= false;
         this.state.loginContactNumber === ""
@@ -212,14 +224,22 @@ class Header extends Component {
         xhrLogin.send(dataLogin);
     };
 
+    /*
+    handler to set the change in contact number
+    */
     loginContactNumberChangeHandler = (e) => {
         this.setState({loginContactNumber: e.target.value});
     };
-
+    /*
+    handler to set the change in password 
+    */
     loginPasswordChangeHandler = (e) => {
         this.setState({loginPassword: e.target.value});
     };
 
+    /*
+    handler for sign up
+    */
     signUpClickHandler = () => {
         let error= false;
         this.state.firstName === ""
@@ -333,22 +353,38 @@ class Header extends Component {
         xhrSignup.send(dataSignup);
     };
 
+    /*
+    handler to set the change in firstName 
+    */
     firstNameChangeHandler = (e) => {
         this.setState({firstName: e.target.value});
     };
 
+    /*
+    handler to set the change in lastname 
+    */
     lastNameChangeHandler = (e) => {
         this.setState({lastName: e.target.value});
     };
 
+    
+    /*
+    handler to set the change in email 
+    */
     emailChangeHandler = (e) => {
         this.setState({email: e.target.value});
     };
 
+    /*
+    handler to set the change in signup password 
+    */
     signupPasswordChangeHandler = (e) => {
         this.setState({signupPassword: e.target.value});
     };
 
+    /*
+    handler to set the change in signup contact number 
+    */
     signupContactNumberChangeHandler = (e) => {
         this.setState({signupContactNumber: e.target.value});
     };
@@ -362,18 +398,30 @@ class Header extends Component {
         this.setState({snackBarOpen: true});
     };
 
+    /*
+    handler to handle menu
+    */
     handleMenu = (event) => {
         this.setState({anchorEl: event.currentTarget});
     };
 
+    /*
+    handler to handle close menu
+    */
     handleClose = () => {
         this.setState({anchorEl: null});
     };
 
+    /*
+    handler for click of Profile Menu
+    */
     handleProfileMenuClick = () => {
         this.setState({anchorEl: null});
     };
 
+    /*
+    handler for logout
+    */
     handleLogoutMenuClick = () => {
         this.setState({anchorEl: null});
 
@@ -401,6 +449,10 @@ class Header extends Component {
         xhrLogout.send(logoutData);
     };
 
+    
+    /*
+    handler for input Search Change
+    */
     inputSearchChangeHandler = (event) => {
         let that = this;
         let xhrSearchRestaurant = new XMLHttpRequest();

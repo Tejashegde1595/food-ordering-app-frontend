@@ -17,33 +17,42 @@ import "@fortawesome/fontawesome-free-regular";
 import "./Details.css";
 import Divider from "@material-ui/core/Divider";
 import AddIcon from "@material-ui/icons/Add";
+import Snackbar from "@material-ui/core/Snackbar";
+import CloseIcon from "@material-ui/icons/Close";
 
 const styles = (theme) => ({
+    //style for rating
     textRatingCost: {
       "text-overflow": "clip",
       width: "145px",
       color: "grey",
     },
+    //style for restaurant name
     restaurantName: {
       padding: "8px 0px 8px 0px",
       "font-size": "30px",
     },
+    //style for restaurant category
     restaurantCategory: {
       padding: "8px 0px 8px 0px",
     },
+    //style for displaying cost
     avgCost: {
       "padding-left": "5px",
     },
+    //style for displaying item price
     itemPrice: {
       "padding-left": "5px",
     },
+    //style for add + button
     addButton: {
       "margin-left": "25px",
     },
+    //style for menu Items
     menuItemName: {
       "margin-left": "20px",
     },
-  
+    //style for shopping cart
     shoppingCart: {
       color: "black",
       "background-color": "white",
@@ -51,11 +60,13 @@ const styles = (theme) => ({
       height: "50px",
       "margin-left": "-20px",
     },
+    //style for shopping cart header
     cartHeader: {
       "padding-bottom": "0px",
       "margin-left": "10px",
       "margin-right": "10px",
     },
+    //style for shopping cart item button
     cartItemButton: {
       padding: "10px",
       "border-radius": "0",
@@ -64,14 +75,17 @@ const styles = (theme) => ({
         "background-color": "#ffee58",
       },
     },
+     //style for card Content
     cardContent: {
       "padding-top": "0px",
       "margin-left": "10px",
       "margin-right": "10px",
     },
+    //style for displaying total amount
     totalAmount: {
       "font-weight": "bold",
     },
+     //style for displaying checkout button
     checkOutButton: {
       "font-weight": "400",
     },
@@ -80,6 +94,7 @@ const styles = (theme) => ({
 class Details extends Component{
     constructor(props) {
         super(props);
+        //adding required states
         this.state = {
             restaurantDetails: [],
             categories: [],
@@ -90,7 +105,9 @@ class Details extends Component{
             badgeVisible: false,
           };
     }
-
+    /*
+    Getting all the restaurant information at the time of load of page
+    */
     componentDidMount() {
         let data = null;
         let that = this;
@@ -118,6 +135,7 @@ class Details extends Component{
               locality: response.address.locality,
               categoriesName: categoriesName.toString(),
             };
+            //Creating Restaurant categories containing relevant details.
             let categories = response.categories;
             that.setState({
               ...that.state,
@@ -133,14 +151,19 @@ class Details extends Component{
         );
         xhrRestaurantDetails.send(data);
     }
-    
+  /*
+  toggling the visiblity of the badge
+  */
   changeVisibility = () => {
     this.setState({
       ...this.state,
       badgeVisible: !this.state.badgeVisible,
     });
   };
-
+  /*
+  handler to handle minus of the item. 
+  On click the item should be reduced by 1 and removed from cart if quantity is 0
+  */
   minusButtonClickHandler = (item) => {
     let cartItems = this.state.cartItems;
     let index = cartItems.indexOf(item);
@@ -168,6 +191,10 @@ class Details extends Component{
     });
   }
 
+  /*
+  handler to handle addition of the item. 
+  On click the item should be added to the cart
+  */
   cartAddButtonClickHandler = (item) => {
     let cartItems = this.state.cartItems;
     let index = cartItems.indexOf(item);
@@ -187,20 +214,52 @@ class Details extends Component{
     });
   }
 
+  
+  /*
+  handler to handle checkout of the items
+  */
   checkOutButtonClickHandler = () => {
+    let cartItems = this.state.cartItems;
+    let isLoggedIn =
+      sessionStorage.getItem("access-token") == null ? false : true; //only if the user is login then he sould be able to get accesstoken
+    if (cartItems.length === 0) {
+      //Checking if cart is empty
+      this.setState({
+        ...this.state,
+        snackBarOpen: true,
+        snackBarMessage: "Please add an item to your cart!",
+      });
+    } else if (!isLoggedIn) {
+      //Checking if customer is not loggedIn.
+      this.setState({
+        ...this.state,
+        snackBarOpen: true,
+        snackBarMessage: "Please login first!",
+      });
+    } else {
+      //If all the condition are satisfied user pushed to the checkout screen
+      this.props.history.push({
+        pathname: "/checkout",
+        cartItems: this.state.cartItems,
+        restaurantDetails: this.state.restaurantDetails,
+      });
+    }
   }
 
+  /*
+  add Button Handler to increase the items in the cart
+  */
   addButtonClickHandler = (item) => {
     let cartItems = this.state.cartItems;
     let itemPresentInCart = false;
     cartItems.forEach((cartItem) => {
-      if (cartItem.id === item.id) {
+      if (cartItem.id === item.id) { //if the item is already present in the cart
         itemPresentInCart = true;
         cartItem.quantity++;
         cartItem.totalAmount = cartItem.price * cartItem.quantity;
       }
     });
-    if (!itemPresentInCart) {
+    if (!itemPresentInCart) {   //if the item is not present in the cart
       let cartItem = {
         id: item.id,
         name: item.item_name,
@@ -224,7 +283,9 @@ class Details extends Component{
       totalAmount: totalAmount,
     });
   }
-
+  /*
+  handler to close the snackbar
+  */
   snackBarClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -500,9 +561,27 @@ class Details extends Component{
                     </Card>
                 </div>
                 </div>
-                {/** Item cards **/}
-              
-
+                <div>
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  open={this.state.snackBarOpen}
+                  autoHideDuration={4000}
+                  onClose={this.snackBarClose}
+                  TransitionComponent={this.state.transition}
+                  ContentProps={{
+                    "aria-describedby": "message-id",
+                  }}
+                  message={<span id="message-id">{this.state.snackBarMessage}</span>}
+                  action={
+                    <IconButton color="inherit" onClick={this.snackBarClose}>
+                      <CloseIcon />
+                    </IconButton>
+                  }
+                />
+              </div>             
             </div>
         )
     }

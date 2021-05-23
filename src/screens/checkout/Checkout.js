@@ -157,7 +157,6 @@ class Checkout extends Component {
 
     this.state = {
       activeStep: 0,
-      // steps: ["Delivery", "Payment"],
       steps: this.getSteps(),
       value: 0,
       addresses: [],
@@ -199,38 +198,40 @@ class Checkout extends Component {
   };
 
   componentDidMount() {
-    this.getAllAddress();
+    if(this.state.isLoggedIn) {
+      this.getAllAddress();
 
-    let statesData = null;
-    let xhrStates = new XMLHttpRequest();
-    let that = this;
-    xhrStates.addEventListener("readystatechange", function() {
-      if (xhrStates.readyState === 4 && xhrStates.status === 200) {
-        let states = JSON.parse(xhrStates.responseText).states;
-        that.setState({
-          ...that.state,
-          states: states,
-        });
-      }
-    });
-    xhrStates.open("GET", this.props.baseUrl + "states");
-    xhrStates.send(statesData);
+      let statesData = null;
+      let xhrStates = new XMLHttpRequest();
+      let that = this;
+      xhrStates.addEventListener("readystatechange", function() {
+        if (xhrStates.readyState === 4 && xhrStates.status === 200) {
+          let states = JSON.parse(xhrStates.responseText).states;
+          that.setState({
+            ...that.state,
+            states: states,
+          });
+        }
+      });
+      xhrStates.open("GET", this.props.baseUrl + "states");
+      xhrStates.send(statesData);
 
-    let paymentData = null;
-    let xhrPayment = new XMLHttpRequest();
-    xhrPayment.addEventListener("readystatechange", function() {
-      if (xhrPayment.readyState === 4 && xhrPayment.status === 200) {
-        let payment = JSON.parse(xhrPayment.responseText).paymentMethods;
-        that.setState({
-          ...that.state,
-          payment: payment,
-        });
-      }
-    });
-    xhrPayment.open("GET", this.props.baseUrl + "payment");
-    xhrPayment.send(paymentData);
+      let paymentData = null;
+      let xhrPayment = new XMLHttpRequest();
+      xhrPayment.addEventListener("readystatechange", function() {
+        if (xhrPayment.readyState === 4 && xhrPayment.status === 200) {
+          let payment = JSON.parse(xhrPayment.responseText).paymentMethods;
+          that.setState({
+            ...that.state,
+            payment: payment,
+          });
+        }
+      });
+      xhrPayment.open("GET", this.props.baseUrl + "payment");
+      xhrPayment.send(paymentData);
 
-    window.addEventListener("resize", this.getGridListColumn);
+      window.addEventListener("resize", this.getGridListColumn);
+    }
   }
 
   componentWillUnmount() {

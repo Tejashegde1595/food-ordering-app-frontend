@@ -242,7 +242,7 @@ class Header extends Component {
         } else if (
             this.state.email
                 .toString()
-                .match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i) === null
+                .match(/^([\w%+-]+)@([\w-]+\.)+([\w]{2,})$/i) === null
         ) {
             this.setState({emailRequired: "dispBlock"});
             this.setState({emailError: "Invalid Email"});

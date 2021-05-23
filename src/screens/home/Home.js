@@ -92,8 +92,7 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            restaurantList: [],
-            allRestaurantData:[]
+            restaurantList: []
         };
     }
 
@@ -104,8 +103,7 @@ class Home extends Component {
         xhr.addEventListener("readystatechange", function() {
             if (xhr.readyState === 4 && xhr.status === 200) {
                 that.setState({
-                    restaurantList: JSON.parse(this.responseText).restaurants,
-                    allRestaurantData: JSON.parse(this.responseText).restaurants
+                    restaurantList: JSON.parse(this.responseText).restaurants
                 });
             }
         });
@@ -115,18 +113,11 @@ class Home extends Component {
         xhr.send(data);
     }
 
-    updateSearchRestaurant = (searchRestaurant, searchOn) => {
-        if (searchOn) {
+    updateSearchRestaurant = (searchRestaurant) => {
             this.setState({
                 ...this.state,
-                restaurantList: searchRestaurant,
+                restaurantList: searchRestaurant
             });
-
-        } else {
-            this.setState({
-                restaurantList: this.state.allRestaurantData,
-            });
-        }
     };
 
     restaurantCardClickHandler = (restaurantId) => {

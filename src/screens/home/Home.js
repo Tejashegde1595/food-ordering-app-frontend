@@ -66,14 +66,18 @@ const styles = (theme) => ({
     //style to display categories
     categories: {
         "font-size": "16px",
+        "overflow-wrap": "break-word",
         "@media (min-width: 1300px)": {
             "font-size": "15px",
+            "overflow-wrap": "break-word"
         },
         "@media (min-width: 960px) and (max-width:1300px)": {
             "font-size": "20px",
+            "overflow-wrap": "break-word"
         },
         "@media (max-width: 960px)": {
             "font-size": "15px",
+            "overflow-wrap": "break-word"
         },
     },
      //style to display card content
